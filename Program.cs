@@ -221,7 +221,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Enter C code to analyze (type 'SCAN' on a new line to finish input):");
+        Console.WriteLine("Enter C code to analyze (type 'scan' on a new line to finish input):");
 
         string code = "";
         string line;
