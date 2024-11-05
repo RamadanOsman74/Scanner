@@ -37,7 +37,6 @@ class LexicalAnalyzer
 {
     private string _input;
     private int _position;
-    private bool _lastWasDataType = false;
 
     static readonly string[] KeywordsAndDataTypes = {
         "if", "else", "while", "for", "return", "break", "continue",
@@ -46,7 +45,7 @@ class LexicalAnalyzer
 
     static readonly char[] Operators = { '+', '-', '*', '/', '=', '<', '>', '&', '|', '!', '%' };
     static readonly char[] SpecialCharacters = { '(', ')', '{', '}', '[', ']', ';', ',', ':' };
-
+    
     public LexicalAnalyzer(string input)
     {
         _input = input;
@@ -81,6 +80,20 @@ class LexicalAnalyzer
             {
                 tokens.Add(ReadNumericConstant());
             }
+            else if (current == '/')
+            {
+                // Try to read as a comment
+                Token commentToken = ReadComment();
+                if (commentToken != null)
+                {
+                    tokens.Add(commentToken);
+                }
+                else
+                {
+                    tokens.Add(new Token(TokenType.Operator, current.ToString()));
+                    _position++;
+                }
+            }
             else if (Operators.Contains(current))
             {
                 tokens.Add(ReadOperator());
@@ -97,19 +110,6 @@ class LexicalAnalyzer
             else if (current == '\"')
             {
                 tokens.Add(ReadStringConstant());
-            }
-            else if (current == '/')
-            {
-                Token commentToken = ReadComment();
-                if (commentToken != null)
-                {
-                    tokens.Add(commentToken);
-                }
-                else
-                {
-                    tokens.Add(new Token(TokenType.Unknown, current.ToString()));
-                    _position++;
-                }
             }
             else
             {
@@ -130,20 +130,11 @@ class LexicalAnalyzer
 
         if (Array.Exists(KeywordsAndDataTypes, keyword => keyword == value))
         {
-            _lastWasDataType = true;
             return new Token(TokenType.Keyword, value);
         }
         else
         {
-            if (_lastWasDataType)
-            {
-                _lastWasDataType = false;
-                return new Token(TokenType.Identifier, value);
-            }
-            else
-            {
-                return new Token(TokenType.Unknown, value);
-            }
+            return new Token(TokenType.Identifier, value);
         }
     }
 
@@ -205,7 +196,6 @@ class LexicalAnalyzer
             {
                 _position++;
             }
-            // Capture the entire comment as a single token
             return new Token(TokenType.Comment, _input.Substring(start, _position - start).TrimEnd());
         }
         // Check for multi-line comment
