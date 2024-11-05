@@ -1,5 +1,5 @@
 # Lexical Analyzer
-A C# program that performs lexical analysis on C-style code. It identifies various tokens such as keywords, identifiers, operators, numeric constants, character constants, string constants, comments, special characters, whitespace, and newlines.
+A C# program that performs lexical analysis on C Programming code. It identifies various tokens such as keywords, identifiers, operators, numeric constants, character constants, string constants, comments, special characters, whitespace, and newline.
 
 ## Features
 - Recognizes keywords (e.g., if, else, while, for)
