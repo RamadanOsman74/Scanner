@@ -235,7 +235,7 @@ class Program
 
         string code = "";
         string line;
-        while ((line = Console.ReadLine()) != "SCAN")
+        while ((line = Console.ReadLine()) != "scan")
         {
             code += line + "\n";
         }
